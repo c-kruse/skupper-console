@@ -1,0 +1,30 @@
+name: tag-dev-release
+
+on:
+  workflow_run:
+    workflows: [skupper-console]
+    branches:
+      - main
+      - v2
+    types:
+      - completed
+jobs:
+  tag-dev-release:
+    name: Tag Dev Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+      - name: Set dev tag 📋
+        run: echo "DEV_TAG=dev-${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_ENV
+      - name: Delete previous tag 📋
+        run: |
+          if git push --delete origin "${DEV_TAG}" ; then
+            echo "Deleted";
+          else
+            echo "Not Deleted";
+          fi
+      - name: Push tag 📋
+        run: |
+          git tag "${DEV_TAG}"
+          git push origin "${DEV_TAG}"
