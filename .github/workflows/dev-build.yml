@@ -3,8 +3,14 @@ name: Build and Release Development Artifact
 on:
   push:
     tags:
-      - dev-main
-      - dev-v2
+      - 'dev-*'
+  workflow_run:
+    workflows: [tag-dev-release]
+    branches:
+      - main
+      - v2
+    types:
+      - completed
 
 jobs:
   build-and-upload:
