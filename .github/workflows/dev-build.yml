@@ -3,7 +3,7 @@ name: Build and Release Development Artifact
 on:
   push:
     tags:
-      - 'dev-*'
+      - dev-*
 
 jobs:
   build-and-upload:
