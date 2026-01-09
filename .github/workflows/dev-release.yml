@@ -40,6 +40,14 @@ jobs:
         run: |
           cd build/ && tar -zcvf ../console.tgz --exclude='./data' .
 
+      - name: Get commit info 📋
+        id: commit_info
+        run: |
+          echo "timestamp=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_OUTPUT
+          echo "message<<EOF" >> $GITHUB_OUTPUT
+          git log -1 --pretty=%B >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
       - name: Update Development Release ✨
         uses: softprops/action-gh-release@v2
         with:
@@ -53,13 +61,13 @@ jobs:
             **Warning**: This is a development build and may contain unstable features.
 
             **Built from**: ${{ github.sha }}
-            **Build date**: ${{ github.event.head_commit.timestamp }}
+            **Build date**: ${{ steps.commit_info.outputs.timestamp }}
 
             ## Download
             - [console.tgz](https://github.com/${{ github.repository }}/releases/download/development/console.tgz)
 
             ## Latest Commit
-            ${{ github.event.head_commit.message }}
+            ${{ steps.commit_info.outputs.message }}
           files: |
             console.tgz
           prerelease: true
