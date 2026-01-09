@@ -48,29 +48,36 @@ jobs:
           git log -1 --pretty=%B >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
+      - name: Update development tag 🏷️
+        run: |
+          git tag -f development
+          git push -f origin development
+
       - name: Update Development Release ✨
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: development
-          name: Development Build
-          body: |
-            🚧 **Development Build** - Latest build from main branch
+        run: |
+          # Delete existing release if it exists
+          gh release delete development --yes || true
 
-            This is an automatically updated development release containing the latest build from the main branch.
+          # Create new release
+          gh release create development console.tgz \
+            --title "Development Build" \
+            --notes "$(cat <<EOF
+          🚧 **Development Build** - Latest build from main branch
 
-            **Warning**: This is a development build and may contain unstable features.
+          This is an automatically updated development release containing the latest build from the main branch.
 
-            **Built from**: ${{ github.sha }}
-            **Build date**: ${{ steps.commit_info.outputs.timestamp }}
+          **Warning**: This is a development build and may contain unstable features.
 
-            ## Download
-            - [console.tgz](https://github.com/${{ github.repository }}/releases/download/development/console.tgz)
+          **Built from**: ${{ github.sha }}
+          **Build date**: ${{ steps.commit_info.outputs.timestamp }}
 
-            ## Latest Commit
-            ${{ steps.commit_info.outputs.message }}
-          files: |
-            console.tgz
-          prerelease: true
-          make_latest: false
+          ## Download
+          - [console.tgz](https://github.com/${{ github.repository }}/releases/download/development/console.tgz)
+
+          ## Latest Commit
+          ${{ steps.commit_info.outputs.message }}
+          EOF
+          )" \
+            --prerelease
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
