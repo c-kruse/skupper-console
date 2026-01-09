@@ -1,0 +1,64 @@
+name: Development Release 🚧
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-release:
+    name: Update Development Release 📦
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code 🛎️
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js ⚙️
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'yarn'
+          cache-dependency-path: yarn.lock
+
+      - name: Install Dependencies 📦
+        run: |
+          HUSKY=0 CYPRESS_INSTALL_BINARY=0 yarn install --prefer-offline --frozen-lockfile
+
+      - name: Build Project 🚧
+        run: |
+          yarn build
+        env:
+          CI: false
+
+      - name: Package Build 📦
+        run: |
+          cd build/ && tar -zcvf ../console.tgz --exclude='./data' .
+
+      - name: Update Development Release ✨
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: development
+          name: Development Build
+          body: |
+            🚧 **Development Build** - Latest build from main branch
+
+            This is an automatically updated development release containing the latest build from the main branch.
+
+            **Warning**: This is a development build and may contain unstable features.
+
+            **Built from**: ${{ github.sha }}
+            **Build date**: ${{ github.event.head_commit.timestamp }}
+
+            ## Download
+            - [console.tgz](https://github.com/${{ github.repository }}/releases/download/development/console.tgz)
+
+            ## Latest Commit
+            ${{ github.event.head_commit.message }}
+          files: |
+            console.tgz
+          prerelease: true
+          make_latest: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
