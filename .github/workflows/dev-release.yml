@@ -1,7 +1,10 @@
 name: Development Release 🚧
 
 on:
-  push:
+  workflow_run:
+    workflows: ["Build and Test 🏗️"]
+    types:
+      - completed
     branches:
       - main
 
@@ -9,6 +12,7 @@ jobs:
   build-and-release:
     name: Update Development Release 📦
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     permissions:
       contents: write
     steps:
