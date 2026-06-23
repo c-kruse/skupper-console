@@ -70,7 +70,7 @@ To run the e2e tests, you'll need to configure the following environment variabl
 
 - `OBSERVER_URL`: The console uses a real network observer.
 - `API_VERSION`: Part of the url api. **Note**: Do not include a leading slash (/) in the value of API_VERSION.
-- `SKUPPER_CONSOLE_EMBED`: When set to `true`, the console uses relative paths for all resources (API calls, scripts, CSS, images), allowing it to be embedded as static files in other applications. This enables the console to work at any URL path (e.g., `/console/my-customer/api/v2alpha1`). (ie: SKUPPER_CONSOLE_EMBED=true yarn build)
+- `SKUPPER_CONSOLE_EMBED`: When set to `true`, the console uses relative paths for all resources (API calls, scripts, CSS, images), allowing it to be embedded as static files in other applications. This enables the console to work at any URL path, e.g., `/console/my-site/index.html`, which would require that the Collector's APIs are available through `/console/my-site/api/v2alpha1`. (ie: yarn build:embed)
 - `BRAND_APP_LOGO`: Customize the logo for the build.
 - `BRAND_FAVICON`: Customize the favicon for the build.
 - `USE_MOCK_SERVER`: Use predefined static data to display the console. (ie: USE_MOCK_SERVER=true yarn build)
