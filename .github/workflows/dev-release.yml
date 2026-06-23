@@ -40,6 +40,17 @@ jobs:
         run: |
           cd build/ && tar -zcvf ../console.tgz --exclude='./data' .
 
+      - name: Build Project (Embed) 🚧
+        run: |
+          rm -rf build/
+          SKUPPER_CONSOLE_EMBED=true yarn build
+        env:
+          CI: false
+
+      - name: Package Build (Embed) 📦
+        run: |
+          cd build/ && tar -zcvf ../console-embed.tgz --exclude='./data' .
+
       - name: Get commit info 📋
         id: commit_info
         run: |
@@ -59,7 +70,7 @@ jobs:
           gh release delete development --yes || true
 
           # Create new release
-          gh release create development console.tgz \
+          gh release create development console.tgz console-embed.tgz \
             --title "Development Build" \
             --notes "$(cat <<EOF
           🚧 **Development Build** - Latest build from main branch
@@ -73,6 +84,7 @@ jobs:
 
           ## Download
           - [console.tgz](https://github.com/${{ github.repository }}/releases/download/development/console.tgz)
+          - [console-embed.tgz](https://github.com/${{ github.repository }}/releases/download/development/console-embed.tgz)
 
           ## Latest Commit
           ${{ steps.commit_info.outputs.message }}
