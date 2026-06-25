@@ -37,6 +37,17 @@ jobs:
         run: |
           cd build/ && tar -zcvf ../console.tgz --exclude='./data' .
 
+      - name: Build Project (Embed) 🚧
+        run: |
+          rm -rf build/
+          SKUPPER_CONSOLE_EMBED=true yarn build
+        env:
+          CI: false
+
+      - name: Package Build (Embed) 📦
+        run: |
+          cd build/ && tar -zcvf ../console-embed.tgz --exclude='./data' .
+
       - name: Create Draft Release ✨
         id: create_release
         uses: actions/create-release@v1
@@ -48,6 +59,8 @@ jobs:
           body: |
             Skupper-console is available as a tar ball:
             - console.tgz
+            The embeddable skupper-console is available as a tar ball:
+            - console-embed.tgz
             Issues fixed in this release:
             - https://github.com/skupperproject/skupper-console/issues?q=is:issue%20milestone:${{ env.RELEASE_VERSION }}
           draft: true
@@ -61,4 +74,15 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./console.tgz
           asset_name: console.tgz
+          asset_content_type: application/tar+gzip
+
+      - name: Upload Release Asset (Embed) ⬆️
+        id: upload-release-asset-embed
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./console-embed.tgz
+          asset_name: console-embed.tgz
           asset_content_type: application/tar+gzip

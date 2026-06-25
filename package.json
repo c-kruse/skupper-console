@@ -18,6 +18,7 @@
   },
   "scripts": {
     "build": "tsc && webpack --config webpack.config.mjs",
+    "build:embed": "SKUPPER_CONSOLE_EMBED=true yarn build",
     "build:preview": "vite preview",
     "start": "vite --host",
     "test": "yarn test:watch --run",
