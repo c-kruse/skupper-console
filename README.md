@@ -22,7 +22,7 @@
 
 ## Enable the console from Skupper
 
-The network console works alongside the **network observer**. Follow the steps outlined in the [network observer setup guide](https://github.com/skupperproject/skupper/blob/v2/cmd/network-observer/resources/README.md) to configure a valid route.
+The network console works alongside the **network observer**. Follow the steps outlined in the [network observer setup guide](https://github.com/skupperproject/skupper/blob/main/charts/network-observer/README.md) to configure a valid route.
 
 ## Development
 
