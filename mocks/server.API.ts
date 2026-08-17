@@ -124,10 +124,12 @@ export const MockApi = {
     results: processes.results.find(({ identity }) => identity === id)
   }),
 
-  getListeners: (_: unknown, { queryParams }: ApiProps) => {
+  getListeners: (_: unknown, { url }: ApiProps) => {
     const results = getMockData(listeners.results, ITEM_COUNT > 0);
-    const filteredResults = filterResults(results, queryParams);
-    const paginatedResults = paginateResults(filteredResults, queryParams);
+    const { limit, offset, ...filters } = extractQueryParams(url) || {};
+
+    const filteredResults = filterResults(results, filters);
+    const paginatedResults = paginateResults(filteredResults, { offset, limit });
 
     return {
       results: paginatedResults,
@@ -136,10 +138,12 @@ export const MockApi = {
     };
   },
 
-  getConnectors: (_: unknown, { queryParams }: ApiProps) => {
+  getConnectors: (_: unknown, { url }: ApiProps) => {
     const results = getMockData(connectors.results, ITEM_COUNT > 0);
-    const filteredResults = filterResults(results, queryParams);
-    const paginatedResults = paginateResults(filteredResults, queryParams);
+    const { limit, offset, ...filters } = extractQueryParams(url) || {};
+
+    const filteredResults = filterResults(results, filters);
+    const paginatedResults = paginateResults(filteredResults, { offset, limit });
 
     return {
       results: paginatedResults,
